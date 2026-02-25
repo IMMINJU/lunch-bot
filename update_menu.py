@@ -157,14 +157,11 @@ def main():
         print("\n[FAIL] Image URL not found")
         return False
 
-    # 2. Download image
-    print("[2/2] Downloading image...")
-    if not download_image(image_url):
-        print("\n[FAIL] Image download failed")
-        return False
-
-    # 3. Save info
+    # 2. Save info
     save_menu_info(image_url)
+
+    # 3. Download image (로컬용, 실패해도 계속 진행)
+    download_image(image_url)
 
     print("\n[DONE] Weekly menu update complete!")
     return True

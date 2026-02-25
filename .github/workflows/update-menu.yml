@@ -1,0 +1,41 @@
+name: Update Weekly Menu
+
+on:
+  schedule:
+    # 월요일 11:00 KST = 02:00 UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-menu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt selenium webdriver-manager
+
+      - name: Run update_menu.py
+        env:
+          TZ: Asia/Seoul
+        run: python update_menu.py
+
+      - name: Commit and push menu_info.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add menu_info.json
+          git diff --cached --quiet || git commit -m "Update menu_info.json ($(date +%Y-%m-%d))"
+          git push
