@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+
+# 로컬 이미지
+menu_image.jpg
+menu_highlighted.jpg
+
+# 로컬 스케줄러 (더이상 사용 안함)
+setup_scheduler.bat
+remove_scheduler.bat
+
+# Windows
+nul
+Thumbs.db

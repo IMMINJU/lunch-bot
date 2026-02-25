@@ -1,0 +1,30 @@
+name: Send Lunch Menu to Google Chat
+
+on:
+  schedule:
+    # 평일 12:00 KST = 03:00 UTC
+    - cron: '0 3 * * 1-5'
+  workflow_dispatch: # 수동 트리거 가능
+
+jobs:
+  send-menu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send lunch menu to Google Chat
+        env:
+          GCHAT_WEBHOOK_URL: ${{ secrets.GCHAT_WEBHOOK_URL }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          TZ: Asia/Seoul
+        run: python send_gchat.py
