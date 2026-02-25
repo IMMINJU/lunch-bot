@@ -2,8 +2,8 @@ name: Update Weekly Menu
 
 on:
   schedule:
-    # 월요일 11:00 KST = 02:00 UTC
-    - cron: '0 2 * * 1'
+    # 월요일 10:00 KST = 01:00 UTC
+    - cron: '0 1 * * 1'
   workflow_dispatch:
 
 jobs:

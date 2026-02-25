@@ -2,8 +2,8 @@ name: Send Lunch Menu to Google Chat
 
 on:
   schedule:
-    # 평일 12:00 KST = 03:00 UTC
-    - cron: '0 3 * * 1-5'
+    # 평일 11:00 KST = 02:00 UTC
+    - cron: '0 2 * * 1-5'
   workflow_dispatch: # 수동 트리거 가능
 
 jobs:
