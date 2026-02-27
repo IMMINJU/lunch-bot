@@ -229,22 +229,15 @@ def main():
     if not img:
         sys.exit(1)
 
-    # 2. 월요일: 전체 식단표 먼저 발송
-    if weekday == 0:
-        print("\n[월요일] 전체 식단표 발송...")
-        full_url = upload_to_imgbb(img, name_suffix="full")
-        if full_url:
-            send_gchat_card(full_url, week_info, title="이번주 식단표", subtitle_extra="주간 전체")
-
-    # 3. 오늘 메뉴 크롭
+    # 2. 오늘 메뉴 크롭
     cropped = crop_today_menu(img, weekday)
 
-    # 4. ImgBB 업로드
+    # 3. ImgBB 업로드
     imgbb_url = upload_to_imgbb(cropped)
     if not imgbb_url:
         sys.exit(1)
 
-    # 5. Google Chat 발송
+    # 4. Google Chat 발송
     success = send_gchat_card(imgbb_url, week_info)
     if not success:
         sys.exit(1)
