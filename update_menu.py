@@ -64,34 +64,30 @@ def get_menu_image_url():
         time.sleep(5)
         page_source = driver.page_source
 
-        # 피드 이미지에서 원본 URL 추출
-        pattern = r'size=678x452[^"]*src=(https%3A%2F%2Fldb-phinf\.pstatic\.net%2F[^"&]+)'
-        matches = re.findall(pattern, page_source)
+        # 피드 데이터가 JSON으로 임베드돼 있어 / → / 로 정규화 후 검색
+        normalized = page_source.replace('\\u002F', '/').replace('%2F', '/')
+
+        # ldb-phinf.pstatic.net의 원본 이미지 URL 추출 (날짜 포함)
+        pattern = r'https?://ldb-phinf\.pstatic\.net/\d{8}_\d+/[^"\s<>\\]+\.(?:jpe?g|png)'
+        matches = re.findall(pattern, normalized, re.IGNORECASE)
 
         if matches:
-            # URL에서 날짜(YYYYMMDD)를 파싱해서 가장 최신 이미지 선택
-            decoded_urls = [urllib.parse.unquote(m) for m in matches]
+            # 날짜(YYYYMMDD)를 파싱해서 가장 최신 이미지 선택
             date_pattern = r'ldb-phinf\.pstatic\.net/(\d{8})_'
 
-            best_url = decoded_urls[0]
+            best_url = matches[0]
             best_date = ""
-            for url in decoded_urls:
+            for url in matches:
                 date_match = re.search(date_pattern, url)
                 if date_match and date_match.group(1) > best_date:
                     best_date = date_match.group(1)
                     best_url = url
 
-            original_url = best_url
-            image_url = f"https://search.pstatic.net/common/?autoRotate=true&quality=100&type=f&size=1920x1280&src={urllib.parse.quote(original_url, safe='')}"
+            # search.pstatic.net 리사이즈 래퍼로 감싸서 1920x1280 고화질로 받기
+            image_url = f"https://search.pstatic.net/common/?autoRotate=true&quality=100&type=f&size=1920x1280&src={urllib.parse.quote(best_url, safe='')}"
             print(f"   Image URL found! (date: {best_date}, {len(matches)} candidates)")
         else:
-            pattern = r'https://search\.pstatic\.net/common/\?[^"]+size=678x452[^"]+\.jpeg'
-            matches = re.findall(pattern, page_source)
-            if matches:
-                image_url = matches[0].replace('&amp;', '&')
-                print("   Image URL found (fallback)")
-            else:
-                print("   Image not found")
+            print("   Image not found")
 
         return image_url
 
