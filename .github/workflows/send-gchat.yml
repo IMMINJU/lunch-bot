@@ -1,10 +1,9 @@
 name: Send Lunch Menu to Google Chat
 
 on:
-  schedule:
-    # 평일 11:00 KST = 02:00 UTC
-    - cron: '0 2 * * 1-5'
-  workflow_dispatch: # 수동 트리거 가능
+  # 스케줄은 외부 스케줄러(cron-job.org)가 workflow_dispatch로 정시 트리거함.
+  # GitHub schedule 크론은 지연/스킵이 심해 제거했다. (평일 11:00 KST)
+  workflow_dispatch: # 외부 스케줄러 + 수동 트리거
 
 jobs:
   send-menu:

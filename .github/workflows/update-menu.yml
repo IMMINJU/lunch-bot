@@ -1,9 +1,8 @@
 name: Update Weekly Menu
 
 on:
-  schedule:
-    # 월요일 10:00 KST = 01:00 UTC
-    - cron: '0 1 * * 1'
+  # 스케줄은 외부 스케줄러(cron-job.org)가 workflow_dispatch로 정시 트리거함.
+  # GitHub schedule 크론은 지연/스킵이 심해 제거했다. (월요일 10:00 KST)
   workflow_dispatch:
 
 permissions:
